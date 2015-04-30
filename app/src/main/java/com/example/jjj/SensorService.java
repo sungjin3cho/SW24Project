@@ -37,6 +37,10 @@ public class SensorService extends Service implements SensorEventListener {
 
     private float mPrevRotationVectorValue = 0.0f;
     private float mRotationVectorZ = 0.0f;
+
+    private float mGravityY = 0.0f;
+    private float mGravityZ = 0.0f;
+
     private SensorManager mSensorManager;
 
     private boolean isFlashOn = false;
@@ -181,18 +185,24 @@ public class SensorService extends Service implements SensorEventListener {
             Log.d(TAG,"GravitySensor.values[1] = "+event.values[1]);
             long currentTime = System.currentTimeMillis();
             long gabOfTime = (currentTime - lastTime);
-            if (gabOfTime > 100)
-            {
-
+            if (gabOfTime > 100) {
                 lastTime = currentTime;
 
-                if (event.values[1] > 8)
-                {
+                if (event.values[1] > 8) {
                     isGravityReady = true;
-                } else
-                {
+                } else {
                     isGravityReady = false;
                 }
+
+                if (event.values[1] - mGravityY > 2.0) {
+                    if (event.values[2] - mGravityZ < -2.0)
+                        turnOnFlash();
+                } else if (event.values[1] - mGravityY < -2.0){
+                    if (event.values[2] - mGravityZ > 2.0)
+                        turnOffFlash();
+                }
+                mGravityY = event.values[1];
+                mGravityZ = event.values[2];
             }
         }
         else if(event.sensor.getType() == Sensor.TYPE_LIGHT)
@@ -207,15 +217,16 @@ public class SensorService extends Service implements SensorEventListener {
         }
         else if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
         {
-            Log.d(TAG, "[RotationVector.vlaues[0]] = " + event.values[0]);
+         /*   Log.d(TAG, "[RotationVector.vlaues[0]] = " + event.values[0]);
             if(event.values[0] - mPrevRotationVectorValue > 0.15){
                 if(isLightReady && isGravityReady)
                     turnOnFlash();
             } else if(event.values[0] - mPrevRotationVectorValue < -0.15)
                 turnOffFlash();
             mPrevRotationVectorValue = event.values[0];
+            */
             mRotationVectorZ = event.values[2];
-        }
+         }
     }
 
     @Override

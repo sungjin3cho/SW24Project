@@ -3,5 +3,17 @@
 
     <string name="app_name">Sensor G</string>
     <string name="action_settings">Settings</string>
+    <string-array name="if_array">
+        <item>Accelerometer</item>
+        <item>Gyroscope</item>
+        <item>Light Luminance</item>
+        <item>Headset input</item>
+    </string-array>
 
+    <string-array name="then_array">
+        <item>Flash on</item>
+        <item>Flash off</item>
+        <item>Play default music</item>
+        <item>Launch app</item>
+    </string-array>
 </resources>
